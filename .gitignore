@@ -26,4 +26,4 @@ replay_pid*
 target
 *.dylib
 .DS_Store
-tdlib
+/tdlib
