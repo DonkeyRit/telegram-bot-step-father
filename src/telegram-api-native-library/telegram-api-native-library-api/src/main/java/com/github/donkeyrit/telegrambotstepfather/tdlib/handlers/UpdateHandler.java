@@ -24,7 +24,12 @@ public class UpdateHandler implements Client.ResultHandler {
     @Override
     public void onResult(TdApi.Object object) {
         if (SUPPORTED_TDLIB_EVENT_TYPES.contains(object.getConstructor())) {
-            eventBus.publish(new TdLibEvent(object));
+            try {
+                eventBus.publish(new TdLibEvent(object));
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }   
     }
 }

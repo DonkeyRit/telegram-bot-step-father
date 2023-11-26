@@ -1,20 +1,22 @@
 package com.github.donkeyrit.telegrambotstepfather.tdlib.events.queues;
 
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventBus;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.Event;
 
 public class SimpleEventBus<T, EType extends Enum<EType>> implements EventBus<T, EType> {
 
-    @Override
-    public void publish(Event<T, EType> event) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'publish'");
+    private BlockingQueue<Event<T, EType>> queue;
+
+    public SimpleEventBus() {
+        queue = new ArrayBlockingQueue<Event<T, EType>>(100);
     }
 
     @Override
-    public void subscribe(Object subscriber) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'subscribe'");
+    public void publish(Event<T, EType> event) throws InterruptedException {
+        queue.put(event);
     }
-    
 }
