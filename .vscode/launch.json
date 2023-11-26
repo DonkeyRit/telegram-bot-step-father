@@ -9,7 +9,7 @@
             "name": "NewExample",
             "request": "launch",
             "mainClass": "com.github.donkeyrit.telegrambotstepfather.tdlib.example.NewExample",
-            "projectName": "telegramapinativelibrary",
+            "projectName": "tdlib",
             "vmArgs": "-Djava.library.path=src/telegram-api-native-library/telegram-api-native-library-api/src/main/resources"
         },
         {
