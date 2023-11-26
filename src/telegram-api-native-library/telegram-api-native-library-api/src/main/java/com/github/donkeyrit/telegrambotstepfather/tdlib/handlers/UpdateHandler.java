@@ -2,7 +2,7 @@ package com.github.donkeyrit.telegrambotstepfather.tdlib.handlers;
 
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TDLibEventType;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventBus;
-import com.github.donkeyrit.telegrambotstepfather.tdlib.events.TDLibEvent;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.events.TdLibEvent;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi.Object;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.Client;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi;
@@ -24,7 +24,7 @@ public class UpdateHandler implements Client.ResultHandler {
     @Override
     public void onResult(TdApi.Object object) {
         if (SUPPORTED_TDLIB_EVENT_TYPES.contains(object.getConstructor())) {
-            eventBus.publish(new TDLibEvent(object));
+            eventBus.publish(new TdLibEvent(object));
         }   
     }
 }

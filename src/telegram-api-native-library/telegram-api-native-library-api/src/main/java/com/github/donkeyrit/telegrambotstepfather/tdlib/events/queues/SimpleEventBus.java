@@ -1,4 +1,4 @@
-package com.github.donkeyrit.telegrambotstepfather.tdlib.events;
+package com.github.donkeyrit.telegrambotstepfather.tdlib.events.queues;
 
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventBus;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.Event;
