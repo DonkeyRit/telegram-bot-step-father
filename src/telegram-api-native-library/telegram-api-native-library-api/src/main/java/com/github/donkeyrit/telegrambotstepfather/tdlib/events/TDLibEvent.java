@@ -19,8 +19,7 @@ public class TdLibEvent implements Event<TdApi.Object, TdLibEventType> {
 
     @Override
     public TdLibEventType getEventType() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEventType'");
+        return TdLibEventType.valueOf(sourceEvent.getConstructor());
     }
 
     @Override
