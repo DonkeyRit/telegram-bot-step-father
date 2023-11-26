@@ -1,6 +1,6 @@
 package com.github.donkeyrit.telegrambotstepfather.tdlib.handlers;
 
-import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TDLibEventType;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TdLibEventType;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventBus;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.TdLibEvent;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi.Object;
@@ -15,9 +15,9 @@ public class UpdateHandler implements Client.ResultHandler {
     private static final List<Integer> SUPPORTED_TDLIB_EVENT_TYPES = Arrays
             .asList(TdApi.UpdateAuthorizationState.CONSTRUCTOR);
 
-    private final EventBus<TdApi.Object, TDLibEventType> eventBus;
+    private final EventBus<TdApi.Object, TdLibEventType> eventBus;
 
-    public UpdateHandler(EventBus<Object, TDLibEventType> eventBus) {
+    public UpdateHandler(EventBus<Object, TdLibEventType> eventBus) {
         this.eventBus = eventBus;
     }
 

@@ -1,6 +1,6 @@
 package com.github.donkeyrit.telegrambotstepfather.tdlib.example;
 
-import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TDLibEventType;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TdLibEventType;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventBus;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.queues.SimpleEventBus;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.handlers.LogMessageHandler;
@@ -18,7 +18,7 @@ public class NewExample {
 
     public static void main(String[] args) throws InterruptedException {
 
-        EventBus<TdApi.Object, TDLibEventType> eventBus = new SimpleEventBus<>();
+        EventBus<TdApi.Object, TdLibEventType> eventBus = new SimpleEventBus<>();
         Client.ResultHandler updateHandler = new UpdateHandler(eventBus);
 
         // set log message handler to handle only fatal errors (0) and plain log
@@ -49,8 +49,6 @@ public class NewExample {
         request.databaseDirectory = "tdlib";
         request.useMessageDatabase = true;
         request.useSecretChats = true;
-        request.apiId = 94575;
-        request.apiHash = "a3406de8d171bb422bb6ddf3bbd800e2";
         request.systemLanguageCode = "en";
         request.deviceModel = "Desktop";
         request.applicationVersion = "1.0";

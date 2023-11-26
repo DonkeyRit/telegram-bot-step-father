@@ -6,6 +6,14 @@
     "configurations": [
         {
             "type": "java",
+            "name": "NewExample",
+            "request": "launch",
+            "mainClass": "com.github.donkeyrit.telegrambotstepfather.tdlib.example.NewExample",
+            "projectName": "telegramapinativelibrary",
+            "vmArgs": "-Djava.library.path=src/telegram-api-native-library/telegram-api-native-library-api/src/main/resources"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
@@ -16,7 +24,7 @@
             "request": "launch",
             "mainClass": "com.github.donkeyrit.telegrambotstepfather.tdlib.example.Example",
             "projectName": "telegramapinativelibrary",
-            "vmArgs" : "-Djava.library.path=src/telegram-api-native-library/telegram-api-native-library-api/src/main/resources"
+            "vmArgs": "-Djava.library.path=src/telegram-api-native-library/telegram-api-native-library-api/src/main/resources"
         }
     ]
 }
