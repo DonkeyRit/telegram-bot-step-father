@@ -21,10 +21,4 @@ public class TdLibEvent implements Event<TdApi.Object, TdLibEventType> {
     public TdLibEventType getEventType() {
         return TdLibEventType.valueOf(sourceEvent.getConstructor());
     }
-
-    @Override
-    public java.lang.Object getPayload() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPayload'");
-    }
 }

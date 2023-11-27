@@ -2,42 +2,77 @@ package com.github.donkeyrit.telegrambotstepfather.tdlib.events.queues;
 
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventHandler;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventBus;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TdLibEventType;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.Event;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
 import java.util.Map;
 
-public class SimpleEventBus<T, EType extends Enum<EType>> implements EventBus<T, EType> {
+public class SimpleEventBus implements EventBus<TdApi.Object, TdLibEventType> {
 
-    private final Map<EType, BlockingQueue<Event<T, EType>>> eventQueues;
-    private final Map<EType, CopyOnWriteArraySet<EventHandler<T, EType>>> subscribers;
+    private final Map<TdLibEventType, BlockingQueue<Event<TdApi.Object, TdLibEventType>>> eventQueues;
+    private final Map<TdLibEventType, CopyOnWriteArraySet<EventHandler<TdApi.Object, TdLibEventType>>> subscribers;
+    private final ExecutorService executorService;
 
     public SimpleEventBus() {
         eventQueues = new ConcurrentHashMap<>();
         subscribers = new ConcurrentHashMap<>();
+        executorService = Executors.newCachedThreadPool();
+        startEventDispatchers();
+    }
+
+    private void startEventDispatchers() {
+        for (TdLibEventType eventType : TdLibEventType.values()) {
+            executorService.submit(() -> {
+                while (!Thread.currentThread().isInterrupted()) {
+                    try {
+                        Event<TdApi.Object, TdLibEventType> event = eventQueues.get(eventType).take();
+                        notifySubscribers(eventType, event);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt(); // Restore the interrupted status
+                        break;
+                    }
+                }
+            });
+        }
+    }
+
+    private void notifySubscribers(TdLibEventType eventType, Event<TdApi.Object, TdLibEventType> event) {
+        for (EventHandler<TdApi.Object, TdLibEventType> handler : subscribers.getOrDefault(eventType, new CopyOnWriteArraySet<>())) {
+            handler.handleEvent(event);
+        }
     }
 
     @Override
-    public void publish(Event<T, EType> event) throws InterruptedException {
-        BlockingQueue<Event<T, EType>> queue = eventQueues
+    public void publish(Event<TdApi.Object, TdLibEventType> event) throws InterruptedException {
+        BlockingQueue<Event<TdApi.Object, TdLibEventType>> queue = eventQueues
             .computeIfAbsent(event.getEventType(), k -> new LinkedBlockingQueue<>());
         queue.put(event);
     }
 
     @Override
-    public void subscribe(EType eventType, EventHandler<T, EType> handler) {
-        CopyOnWriteArraySet<EventHandler<T, EType>> set = subscribers
+    public void subscribe(TdLibEventType eventType, EventHandler<TdApi.Object, TdLibEventType> handler) {
+        CopyOnWriteArraySet<EventHandler<TdApi.Object, TdLibEventType>> set = subscribers
             .computeIfAbsent(eventType, k -> new CopyOnWriteArraySet<>());
         set.add(handler);
     }
 
     @Override
-    public void unsubscribe(EType eventType, EventHandler<T, EType> handler) {
+    public void unsubscribe(TdLibEventType eventType, EventHandler<TdApi.Object, TdLibEventType> handler) {
         if (subscribers.containsKey(eventType)) {
             subscribers.get(eventType).remove(handler);
         }
+    }
+
+    @Override
+    public void shutdown() {
+        executorService.shutdown();
+        // Optionally wait for termination and handle InterruptedException
     }
 }
