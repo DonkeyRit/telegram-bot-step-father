@@ -35,9 +35,12 @@ public class SimpleEventBus implements EventBus<TdApi.Object, TdLibEventType> {
 
     private void startEventDispatchers() {
         for (TdLibEventType eventType : TdLibEventType.values()) {
+            logger.info("Submit a new task for event type - {}", eventType.toString());
             executorService.submit(() -> {
+                logger.debug("Start a new task - {}", !Thread.currentThread().isInterrupted());
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
+                        logger.info("Notify about a new event with type - {}", eventType.toString());
                         Event<TdApi.Object, TdLibEventType> event = eventQueues.get(eventType).take();
                         logger.info("Notify about a new event with type - {}", event.getEventType().toString());
                         notifySubscribers(eventType, event);
