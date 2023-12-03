@@ -3,33 +3,55 @@ package com.github.donkeyrit.telegrambotstepfather.tdlib.events.handlers;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventHandler;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TdLibEventType;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.Event;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi.Function;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.Client;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi;
 
+import java.util.concurrent.BlockingQueue;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Optional;
 
 public class AuthorizationHandler implements EventHandler<TdApi.Object, TdLibEventType> {
+
+    private BlockingQueue<TdApi.Function> sendRequestQueue;
+
+    public AuthorizationHandler(BlockingQueue<Function> sendRequestQueue) {
+        this.sendRequestQueue = sendRequestQueue;
+    }
 
     @Override
     public void handleEvent(Event<TdApi.Object, TdLibEventType> event) {
         TdApi.AuthorizationState authorizationState = ((TdApi.UpdateAuthorizationState) event.getSourceEvent()).authorizationState;
+
+        Optional<TdApi.Function> sendRequest = Optional.empty();
+
         switch (authorizationState.getConstructor()) {
             case TdApi.AuthorizationStateWaitTdlibParameters.CONSTRUCTOR:
-                sendTdLibAuthParameters(null);
+                sendRequest = Optional.of(sendTdLibAuthParameters(null));
                 break;
             case TdApi.AuthorizationStateWaitPhoneNumber.CONSTRUCTOR:
-                sendPhoneNumber(null);
+                sendRequest = Optional.of(sendPhoneNumber(null));
                 break;
             case TdApi.AuthorizationStateWaitCode.CONSTRUCTOR:
-                sendVerificationCode(null);
+                sendRequest = Optional.of(sendVerificationCode(null));
                 break;
             case TdApi.AuthorizationStateReady.CONSTRUCTOR:
                 break;
             default:
                 break;
         }
+
+        if (sendRequest.isPresent()) {
+            try {
+                sendRequestQueue.put(sendRequest.get());
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
     }
     
     private static TdApi.Function sendTdLibAuthParameters(Client client) {
@@ -70,5 +92,4 @@ public class AuthorizationHandler implements EventHandler<TdApi.Object, TdLibEve
         }
         return str;
     }
-
 }

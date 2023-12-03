@@ -1,24 +1,30 @@
 package com.github.donkeyrit.telegrambotstepfather.tdlib.example;
 
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TdLibEventType;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.events.handlers.AuthorizationHandler;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventBus;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.queues.SimpleEventBus;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.handlers.DefaultHandler;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.handlers.LogMessageHandler;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.handlers.UpdateHandler;
-
-import java.io.BufferedReader;
-import java.io.IOError;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import com.github.donkeyrit.telegrambotstepfather.tdlib.Client;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi;
+
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.io.IOException;
+import java.io.IOError;
 
 public class NewExample {
 
     public static void main(String[] args) throws InterruptedException {
 
-        EventBus<TdApi.Object, TdLibEventType> eventBus = new SimpleEventBus<>();
+        BlockingQueue<TdApi.Function> sendRequestQueue = new LinkedBlockingQueue<>();
+
+        EventBus<TdApi.Object, TdLibEventType> eventBus = new SimpleEventBus();
+        eventBus.subscribe(TdLibEventType.UPDATE_AUTHORIZATION_STATE, new AuthorizationHandler(sendRequestQueue));
+
+        Client.ResultHandler defaultHandler = new DefaultHandler();
         Client.ResultHandler updateHandler = new UpdateHandler(eventBus);
 
         // set log message handler to handle only fatal errors (0) and plain log
@@ -35,47 +41,19 @@ public class NewExample {
 
         // create client
         Client client = Client.create(updateHandler, null, null);
-        Thread.sleep(10000);
-        SendTdLibAuthParameters(client);
-        Thread.sleep(10000);
-        SendPhoneNumber(client);
-        Thread.sleep(10000);
-        SendVerificationCode(client);
-        Thread.sleep(10000);
-    }
 
-    private static void SendTdLibAuthParameters(Client client) {
-        TdApi.SetTdlibParameters request = new TdApi.SetTdlibParameters();
-        request.databaseDirectory = "tdlib";
-        request.useMessageDatabase = true;
-        request.useSecretChats = true;
-        request.systemLanguageCode = "en";
-        request.deviceModel = "Desktop";
-        request.applicationVersion = "1.0";
-        request.enableStorageOptimizer = true;
+        while (true) {
+            try {
+                // Attempt to take an element from the queue (blocks if the queue is empty)
+                TdApi.Function request = sendRequestQueue.take();
 
-        client.send(request, null);
-    }
+                // Send the request through the client
+                client.send(request, defaultHandler);
 
-    public static void SendPhoneNumber(Client client) {
-        String phoneNumber = promptString("Please enter phone number: ");
-        client.send(new TdApi.SetAuthenticationPhoneNumber(phoneNumber, null), null);
-    }
-
-    public static void SendVerificationCode(Client client) {
-        String code = promptString("Please enter authentication code: ");
-        client.send(new TdApi.CheckAuthenticationCode(code), null);
-    }
-
-    private static String promptString(String prompt) {
-        System.out.print(prompt);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String str = "";
-        try {
-            str = reader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
+                // Optionally, add any additional processing for the request
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
-        return str;
     }
 }
