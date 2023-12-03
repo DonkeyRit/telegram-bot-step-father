@@ -8,6 +8,10 @@ import com.github.donkeyrit.telegrambotstepfather.tdlib.Client;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi;
 
 import java.util.concurrent.BlockingQueue;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +20,7 @@ import java.util.Optional;
 public class AuthorizationHandler implements EventHandler<TdApi.Object, TdLibEventType> {
 
     private BlockingQueue<TdApi.Function> sendRequestQueue;
+    private static final Logger logger = LoggerFactory.getLogger(AuthorizationHandler.class);
 
     public AuthorizationHandler(BlockingQueue<Function> sendRequestQueue) {
         this.sendRequestQueue = sendRequestQueue;
@@ -26,6 +31,7 @@ public class AuthorizationHandler implements EventHandler<TdApi.Object, TdLibEve
         TdApi.AuthorizationState authorizationState = ((TdApi.UpdateAuthorizationState) event.getSourceEvent()).authorizationState;
 
         Optional<TdApi.Function> sendRequest = Optional.empty();
+        logger.info("Handle event with type - {}", authorizationState.getConstructor());
 
         switch (authorizationState.getConstructor()) {
             case TdApi.AuthorizationStateWaitTdlibParameters.CONSTRUCTOR:

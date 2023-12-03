@@ -7,6 +7,7 @@ import com.github.donkeyrit.telegrambotstepfather.tdlib.events.queues.SimpleEven
 import com.github.donkeyrit.telegrambotstepfather.tdlib.handlers.DefaultHandler;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.handlers.LogMessageHandler;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.handlers.UpdateHandler;
+
 import com.github.donkeyrit.telegrambotstepfather.tdlib.Client;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi;
 
@@ -15,9 +16,14 @@ import java.util.concurrent.BlockingQueue;
 import java.io.IOException;
 import java.io.IOError;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 public class NewExample {
 
     public static void main(String[] args) throws InterruptedException {
+
+        Logger logger = LoggerFactory.getLogger(NewExample.class);
 
         BlockingQueue<TdApi.Function> sendRequestQueue = new LinkedBlockingQueue<>();
 
@@ -40,12 +46,17 @@ public class NewExample {
         }
 
         // create client
+        logger.info("Initializing client.");
         Client client = Client.create(updateHandler, null, null);
+        logger.info("Initialization was finished.");
 
         while (true) {
             try {
                 // Attempt to take an element from the queue (blocks if the queue is empty)
+                logger.info("Wait send request");
                 TdApi.Function request = sendRequestQueue.take();
+
+                logger.info("Request with type - {} are received", request.getConstructor());
 
                 // Send the request through the client
                 client.send(request, defaultHandler);
