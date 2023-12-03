@@ -35,12 +35,12 @@ public class SimpleEventBus implements EventBus<TdApi.Object, TdLibEventType> {
 
     private void startEventDispatchers() {
         for (TdLibEventType eventType : TdLibEventType.values()) {
+            eventQueues.put(eventType, new LinkedBlockingQueue<>());
             logger.info("Submit a new task for event type - {}", eventType.toString());
             executorService.submit(() -> {
                 logger.debug("Start a new task - {}", !Thread.currentThread().isInterrupted());
                 while (!Thread.currentThread().isInterrupted()) {
                     try {
-                        logger.info("Notify about a new event with type - {}", eventType.toString());
                         Event<TdApi.Object, TdLibEventType> event = eventQueues.get(eventType).take();
                         logger.info("Notify about a new event with type - {}", event.getEventType().toString());
                         notifySubscribers(eventType, event);
@@ -63,9 +63,8 @@ public class SimpleEventBus implements EventBus<TdApi.Object, TdLibEventType> {
     @Override
     public void publish(Event<TdApi.Object, TdLibEventType> event) throws InterruptedException {
         logger.info("Receive event with type - {}", event.getEventType().toString());
-        BlockingQueue<Event<TdApi.Object, TdLibEventType>> queue = eventQueues
-            .computeIfAbsent(event.getEventType(), k -> new LinkedBlockingQueue<>());
-        queue.put(event);
+        // TODO: make it synchronized
+        eventQueues.get(event.getEventType()).put(event);
         logger.info("Put to queue");
     }
 
