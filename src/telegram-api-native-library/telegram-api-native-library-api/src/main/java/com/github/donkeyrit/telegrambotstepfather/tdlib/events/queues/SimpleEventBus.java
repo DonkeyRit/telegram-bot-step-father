@@ -8,6 +8,7 @@ import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TdLibEventT
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.Event;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,6 @@ public class SimpleEventBus implements EventBus<TdApi.Object, TdLibEventType> {
     @Override
     public void publish(Event<TdApi.Object, TdLibEventType> event) throws InterruptedException {
         logger.info("Receive event with type - {}", event.getEventType().toString());
-        // TODO: make it synchronized
         eventQueues.get(event.getEventType()).put(event);
         logger.info("Put to queue");
     }
@@ -85,6 +85,15 @@ public class SimpleEventBus implements EventBus<TdApi.Object, TdLibEventType> {
     @Override
     public void shutdown() {
         executorService.shutdown();
-        // Optionally wait for termination and handle InterruptedException
+        try {
+            // Optionally wait for termination and handle InterruptedException
+            if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+                Thread.currentThread().interrupt(); // Restore the interrupted status
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore the interrupted status
+            logger.error("Thread interrupted while waiting for termination.", e);
+        }
     }
 }
