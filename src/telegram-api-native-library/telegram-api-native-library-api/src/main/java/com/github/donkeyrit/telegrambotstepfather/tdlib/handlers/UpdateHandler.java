@@ -1,8 +1,8 @@
 package com.github.donkeyrit.telegrambotstepfather.tdlib.handlers;
 
-import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TdLibEventType;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TelegramLibEventType;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventBus;
-import com.github.donkeyrit.telegrambotstepfather.tdlib.events.TdLibEvent;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.events.TelegramLibEvent;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi.Object;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.Client;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi;
@@ -18,10 +18,10 @@ public class UpdateHandler implements Client.ResultHandler {
     private static final List<Integer> SUPPORTED_TDLIB_EVENT_TYPES = Arrays
             .asList(TdApi.UpdateAuthorizationState.CONSTRUCTOR);
 
-    private final EventBus<TdApi.Object, TdLibEventType> eventBus;
+    private final EventBus<TdApi.Object, TelegramLibEventType> eventBus;
     private static final Logger logger = LoggerFactory.getLogger(UpdateHandler.class);
 
-    public UpdateHandler(EventBus<Object, TdLibEventType> eventBus) {
+    public UpdateHandler(EventBus<Object, TelegramLibEventType> eventBus) {
         this.eventBus = eventBus;
     }
 
@@ -30,7 +30,7 @@ public class UpdateHandler implements Client.ResultHandler {
         if (SUPPORTED_TDLIB_EVENT_TYPES.contains(object.getConstructor())) {
             try {
                 logger.info("Receive event with type - {}", object.getConstructor());
-                eventBus.publish(new TdLibEvent(object));
+                eventBus.publish(new TelegramLibEvent(object));
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

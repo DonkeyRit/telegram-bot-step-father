@@ -21,9 +21,12 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.4.14</version> <!-- Use the latest version -->
+      <version>1.4.14</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>7.0.0</version>
     </dependency>
   </dependencies>
-
-
 </project>

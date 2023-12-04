@@ -1,15 +1,15 @@
 package com.github.donkeyrit.telegrambotstepfather.tdlib.events;
 
-import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TdLibEventType;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TelegramLibEventType;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.Event;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi.Object;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi;
 
-public class TdLibEvent implements Event<TdApi.Object, TdLibEventType> {
+public class TelegramLibEvent implements Event<TdApi.Object, TelegramLibEventType> {
 
     private final TdApi.Object sourceEvent;
 
-    public TdLibEvent(Object sourceEvent) {
+    public TelegramLibEvent(Object sourceEvent) {
         this.sourceEvent = sourceEvent;
     }
 
@@ -18,7 +18,7 @@ public class TdLibEvent implements Event<TdApi.Object, TdLibEventType> {
     }
 
     @Override
-    public TdLibEventType getEventType() {
-        return TdLibEventType.valueOf(sourceEvent.getConstructor());
+    public TelegramLibEventType getEventType() {
+        return TelegramLibEventType.valueOf(sourceEvent.getConstructor());
     }
 }
