@@ -26,7 +26,6 @@ public class SimpleTelegramLibClient implements TelegramLibClient{
     private static Logger logger = LoggerFactory.getLogger(SimpleTelegramLibClient.class);
     private static Client.ResultHandler defaultHandler = new DefaultHandler();
 
-    private final Set<EventHandler<TdApi.Object, TelegramLibEventType>> handlers;
     private final BlockingQueue<TdApi.Function> sendRequestQueue;
     private final EventBus<TdApi.Object, TelegramLibEventType> eventBus;
     private final UpdateHandler updateHandler;
@@ -36,8 +35,7 @@ public class SimpleTelegramLibClient implements TelegramLibClient{
     public SimpleTelegramLibClient(
         Set<EventHandler<TdApi.Object, TelegramLibEventType>> handlers, 
         BlockingQueue<TdApi.Function> sendRequestQueue) {
-
-        this.handlers = handlers;
+            
         this.sendRequestQueue = sendRequestQueue;
         this.eventBus = new SimpleEventBus();
         this.updateHandler = new UpdateHandler(eventBus);

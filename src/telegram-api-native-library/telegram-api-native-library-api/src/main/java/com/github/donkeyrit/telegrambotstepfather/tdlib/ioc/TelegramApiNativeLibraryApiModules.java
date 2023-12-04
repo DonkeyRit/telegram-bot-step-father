@@ -11,6 +11,7 @@ import com.google.inject.multibindings.Multibinder;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -28,6 +29,7 @@ public class TelegramApiNativeLibraryApiModules extends AbstractModule {
     }
 
     @Provides
+    @Singleton
     public BlockingQueue<TdApi.Function> provideSendRequestQueue() {
         return new LinkedBlockingQueue<>();
     }
