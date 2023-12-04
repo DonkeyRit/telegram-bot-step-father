@@ -7,11 +7,11 @@ import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi.Function;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.Client;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi;
 
-import java.util.concurrent.BlockingQueue;
-
+import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.BlockingQueue;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +22,7 @@ public class AuthorizationHandler implements EventHandler<TdApi.Object, Telegram
     private BlockingQueue<TdApi.Function> sendRequestQueue;
     private static final Logger logger = LoggerFactory.getLogger(AuthorizationHandler.class);
 
+    @Inject
     public AuthorizationHandler(BlockingQueue<Function> sendRequestQueue) {
         this.sendRequestQueue = sendRequestQueue;
     }
@@ -97,5 +98,10 @@ public class AuthorizationHandler implements EventHandler<TdApi.Object, Telegram
             e.printStackTrace();
         }
         return str;
+    }
+
+    @Override
+    public TelegramLibEventType getHandledEventType() {
+        return TelegramLibEventType.UPDATE_AUTHORIZATION_STATE;
     }
 }
