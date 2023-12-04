@@ -1,7 +1,6 @@
 package com.github.donkeyrit.telegrambotstepfather.tdlib.events.queues;
 
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventHandler;
-import com.github.donkeyrit.telegrambotstepfather.tdlib.example.NewExample;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventBus;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TdLibEventType;

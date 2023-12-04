@@ -1,7 +1,7 @@
 package com.github.donkeyrit.telegrambotstepfather.tdlib.events.handlers;
 
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventHandler;
-import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TdLibEventType;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TelegramLibEventType;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.Event;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.TdApi.Function;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.Client;
@@ -17,7 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Optional;
 
-public class AuthorizationHandler implements EventHandler<TdApi.Object, TdLibEventType> {
+public class AuthorizationHandler implements EventHandler<TdApi.Object, TelegramLibEventType> {
 
     private BlockingQueue<TdApi.Function> sendRequestQueue;
     private static final Logger logger = LoggerFactory.getLogger(AuthorizationHandler.class);
@@ -27,7 +27,7 @@ public class AuthorizationHandler implements EventHandler<TdApi.Object, TdLibEve
     }
 
     @Override
-    public void handleEvent(Event<TdApi.Object, TdLibEventType> event) {
+    public void handleEvent(Event<TdApi.Object, TelegramLibEventType> event) {
         TdApi.AuthorizationState authorizationState = ((TdApi.UpdateAuthorizationState) event.getSourceEvent()).authorizationState;
 
         Optional<TdApi.Function> sendRequest = Optional.empty();
