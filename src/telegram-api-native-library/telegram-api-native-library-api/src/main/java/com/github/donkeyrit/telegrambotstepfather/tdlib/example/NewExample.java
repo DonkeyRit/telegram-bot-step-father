@@ -1,6 +1,6 @@
 package com.github.donkeyrit.telegrambotstepfather.tdlib.example;
 
-import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TdLibEventType;
+import com.github.donkeyrit.telegrambotstepfather.tdlib.events.enums.TelegramLibEventType;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.handlers.AuthorizationHandler;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.interfaces.EventBus;
 import com.github.donkeyrit.telegrambotstepfather.tdlib.events.queues.SimpleEventBus;
@@ -27,8 +27,8 @@ public class NewExample {
 
         BlockingQueue<TdApi.Function> sendRequestQueue = new LinkedBlockingQueue<>();
 
-        EventBus<TdApi.Object, TdLibEventType> eventBus = new SimpleEventBus();
-        eventBus.subscribe(TdLibEventType.UPDATE_AUTHORIZATION_STATE, new AuthorizationHandler(sendRequestQueue));
+        EventBus<TdApi.Object, TelegramLibEventType> eventBus = new SimpleEventBus();
+        eventBus.subscribe(TelegramLibEventType.UPDATE_AUTHORIZATION_STATE, new AuthorizationHandler(sendRequestQueue));
 
         Client.ResultHandler defaultHandler = new DefaultHandler();
         Client.ResultHandler updateHandler = new UpdateHandler(eventBus);
